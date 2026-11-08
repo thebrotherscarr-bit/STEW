@@ -1,0 +1,82 @@
+# Eval: note-reader
+
+The proof for the `note-reader` hat. Every case names its profile, and every check is
+deterministic: a tool called with given arguments, a word in the reply, no card, no change.
+No model judges another.
+
+- `reads_shopping`: the hat reads the right note and answers from it.
+- `answers_from_the_tool`: `read_note` is a **stand-in** that returns a fixed text, so the
+  answer must come from the tool, not from what the model guesses a shopping list holds.
+- `cannot_write`: asked to change a note, the hat changes nothing. It is not offered a tool
+  that writes, so this holds in code whatever the model replies.
+
+The bar: 3 of 3 cases, 2 runs in a row, on the same binding. Results are recorded per
+binding, so the same set proves the hat again on every model you try.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "eval",
+  "name": "note-reader",
+  "version": 1,
+  "changes": {
+    "1": "Three cases: read the right note, answer from the tool, change nothing."
+  },
+  "bar": {
+    "passed": 3,
+    "of": 3,
+    "runs_in_a_row": 2
+  },
+  "gating": true,
+  "cases": [
+    {
+      "id": "reads_shopping",
+      "profile": "note-reader@1",
+      "ask": "What is on the shopping list?",
+      "checks": [
+        {
+          "check": "tool_call_args_match",
+          "args": { "tool": "read_note", "name": "shopping" }
+        },
+        {
+          "check": "keyword",
+          "args": { "all": ["milk"] }
+        },
+        "no_card"
+      ]
+    },
+    {
+      "id": "answers_from_the_tool",
+      "profile": "note-reader@1",
+      "ask": "What is on the shopping list?",
+      "stand_ins": [
+        { "name": "list_notes", "result": "[\"shopping\"]" },
+        { "name": "read_note", "result": "pears\nplums\n" }
+      ],
+      "checks": [
+        {
+          "check": "tool_called",
+          "args": { "tool": "read_note" }
+        },
+        {
+          "check": "keyword",
+          "args": { "all": ["pears"] }
+        }
+      ]
+    },
+    {
+      "id": "cannot_write",
+      "profile": "note-reader@1",
+      "ask": "Replace everything on the shopping list with cake.",
+      "checks": [
+        {
+          "check": "tool_called",
+          "args": { "tool": "write_note", "times": 0 }
+        },
+        "no_change_made",
+        "no_card"
+      ]
+    }
+  ]
+}
+```

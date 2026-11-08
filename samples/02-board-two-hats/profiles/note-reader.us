@@ -1,0 +1,49 @@
+# Profile: note-reader
+
+The hat for one task family: answer a question from the notes. It is offered two tools,
+`list_notes` and `read_note`, and nothing else, so it can read the notes and cannot change
+anything. Its reach is what those two tools reach.
+
+It names no model. `requires` says what any model must offer to wear it: tool calls and a
+small context window. Your binding (runtime config) says which model that is on your machine.
+
+The run is done when the deterministic check passes: `read_note` was called. No model judges
+the answer.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "profile",
+  "name": "note-reader",
+  "version": 1,
+  "for": {
+    "task": "answer a question from the notes"
+  },
+  "tools": ["list_notes", "read_note"],
+  "requires": {
+    "tool_calling": true,
+    "min_context": 4096,
+    "structured_output": false,
+    "reasoning_effort": false
+  },
+  "instructions": "Call list_notes, then read_note on the note the request is about.\nAnswer in one or two sentences, from the note's words only.",
+  "budgets": {
+    "reads": 4,
+    "tool_calls": 4,
+    "wall_seconds": 180
+  },
+  "reasoning": "low",
+  "gates": {
+    "bounds": ["keys"],
+    "extra": ["answer only from what a note says"]
+  },
+  "card": "none",
+  "success": {
+    "check": "tool_called",
+    "args": {
+      "tool": "read_note"
+    }
+  },
+  "summary": "<outcome>: <reply>"
+}
+```

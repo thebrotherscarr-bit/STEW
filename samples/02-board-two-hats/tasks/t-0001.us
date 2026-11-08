@@ -1,0 +1,14 @@
+# Task: a question for the note-reader hat
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "task",
+  "id": "t-0001",
+  "board": "two-hats",
+  "profile": "note-reader@1",
+  "ask": "What is on the shopping list?",
+  "source": "console",
+  "posted_at": "2026-11-08T09:00:00Z"
+}
+```

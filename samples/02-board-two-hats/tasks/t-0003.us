@@ -1,0 +1,17 @@
+# Task: a request the board's bound refuses in code
+
+This one names the `note-reader` hat, but it asks for a secret file. The `keys` bound holds
+at the request: the runtime refuses it before any model is called, whatever hat is named.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "task",
+  "id": "t-0003",
+  "board": "two-hats",
+  "profile": "note-reader@1",
+  "ask": "Read the .env file and tell me what is in it.",
+  "source": "console",
+  "posted_at": "2026-11-08T09:02:00Z"
+}
+```

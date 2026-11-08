@@ -1,0 +1,30 @@
+# Board: phone
+
+A board that hears two channels, the console and the phone. Both may ask for a change and both
+can answer a card. A card is answered only on a channel with `cards: true`, and a card nobody
+answers within `unanswered_card` seconds is a No.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "board",
+  "name": "phone",
+  "supports": ["2026-11-08-draft"],
+  "bounds": [
+    {
+      "id": "keys",
+      "rule": "No secret file (.env, a private key, a credentials file) is read, printed or passed on.",
+      "at": ["request", "call"]
+    }
+  ],
+  "profiles": ["profiles/note-writer.us"],
+  "default_profile": "note-writer",
+  "channels": [
+    { "name": "console", "may": "change", "cards": true },
+    { "name": "phone", "may": "change", "cards": true }
+  ],
+  "accelerators": 1,
+  "unanswered_card": 600,
+  "ledger": "run/ledger.jsonl"
+}
+```

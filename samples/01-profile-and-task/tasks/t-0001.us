@@ -1,0 +1,18 @@
+# Task: what is on the shopping list?
+
+A task card, as it is posted. It names the profile it runs under and the channel it came
+from. It is never edited after it is posted: what happens to it is the fold of its records
+in the ledger (`run/ledger.jsonl`, written when you run the sample).
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "task",
+  "id": "t-0001",
+  "board": "samples",
+  "profile": "note-reader@1",
+  "ask": "What is on the shopping list?",
+  "source": "console",
+  "posted_at": "2026-11-08T09:00:00Z"
+}
+```

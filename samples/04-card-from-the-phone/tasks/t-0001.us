@@ -1,0 +1,17 @@
+# Task: from the phone, add oranges to the shopping list
+
+The request arrives on the `phone` channel, so the card goes back to the phone, and the summary
+does too.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "task",
+  "id": "t-0001",
+  "board": "phone",
+  "profile": "note-writer@1",
+  "ask": "Add oranges to the shopping list.",
+  "source": "phone",
+  "posted_at": "2026-11-08T09:00:00Z"
+}
+```
