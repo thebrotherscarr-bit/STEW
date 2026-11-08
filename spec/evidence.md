@@ -35,15 +35,16 @@ An eval set is a versioned list of cases.
 5. Every case's run MUST leave a **transcript**: the messages, tool calls, results, cards and the profile
    picked, as JSON Lines. The transcript is the trace that is read before anything is changed.
 6. A run appends one `stew.eval.run` record with the set's `name@version`, the profile's `name@version`, the
-   result for each case, and the transcripts' relative paths.
+   **binding** it ran on (`name`, `model`, `hardware`), the result for each case, and the transcripts'
+   relative paths. Results are per binding: a result on one model and machine says nothing about another.
 
 **Promotion**
 
 7. A new profile version MAY be promoted only when **all** of these hold:
-   - it meets its set's `bar` on the same set version as the current profile version;
+   - it meets its set's `bar` on the same set version and the same binding as the current profile version;
    - it passes every case the current version passes;
    - the promotion is recorded as `stew.profile.promoted`, naming `profile`, `replaces` and `evidence` (the
-     `stew.eval.run` records that met the bar).
+     `stew.eval.run` records that met the bar) and the `binding`. A promotion holds for that binding only.
 8. Promotion MUST be approved by the human, as a card or in the record (`source: <board>/human`). A runtime
    MUST NOT promote a profile on its own.
 9. Both versions stay in the record. A promotion that goes wrong is reversed by promoting the old version

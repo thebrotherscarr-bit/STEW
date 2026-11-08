@@ -10,10 +10,10 @@ Example: `examples/profiles/eval-runner.us`.
 | `version` | yes | an integer. Any change to the profile is a new version. `name@version` names one version |
 | `for` | yes | `task`: the task family in words. `capabilities`: the capability ids it serves |
 | `tools` | yes | the allow-list of exact tool names. `[]` holds no tools |
+| `requires` | yes | what the model must offer: `tool_calling`, `min_context`, and optionally `structured_output` and `reasoning_effort`. Never a model's name |
 | `instructions` | no | at most 8 non-empty lines, added to the agent's standing instructions for this task |
 | `budgets` | no | `reads`, `tool_calls`, `wall_seconds`, `output_tokens` |
-| `reasoning` | no | `low`, `medium` or `high` |
-| `model` | no | the model the profile was measured on, as the runtime names it |
+| `reasoning` | no | `low`, `medium` or `high`. Used only where the bound model offers the knob |
 | `gates` | yes | `bounds`: the board's bounds this task touches. `extra`: refusals the profile adds |
 | `card` | yes | `none`, `plan` or `every-write` |
 | `success` | yes | `check`: a deterministic check name. `args`: its arguments |
@@ -45,7 +45,14 @@ Example: `examples/profiles/eval-runner.us`.
    - When a budget is spent, the runtime MUST stop offering the calls it limits and move the run on: to the
      plan, or to `failed`.
    - An absent budget means the runtime's default, never unlimited.
-7. `reasoning` sets the model's reasoning effort where the model offers one. Otherwise the runtime ignores it.
+7. `reasoning` sets the model's reasoning effort where the binding provides `reasoning_effort`. Otherwise the runtime
+   ignores it.
+
+**Model requirements**
+
+7a. A profile MUST NOT name a model. It declares `requires`, and the runtime runs it only on a binding that meets
+   them (spec/binding.md). A profile that offers tools MUST require `tool_calling`. `min_context` SHOULD be the
+   smallest window its cases pass with, as measured.
 
 **Gates and cards**
 
@@ -76,8 +83,9 @@ refuses goes to a profile with `tools: []` before anything reads it. The pick is
 (`stew.task.state` to `claimed`, with `data.profile` as `name@version`). An eval case names its profile,
 and a case passes only when the profile picked is the profile named.
 
-## One model, many hats
+## Many hats, any model
 
-A profile is not a model. On a mixture-of-experts model the experts are chosen inside the model and cannot
-be selected from outside. In STEW, the "expert" for a task is a profile worn by the same model. `model` and
-`reasoning` are the only model settings a profile carries.
+A profile is not a model. The same profile can be worn by any model that meets its `requires`, on any
+hardware, and is proven separately on each (spec/binding.md). On a mixture-of-experts model the experts are
+chosen inside the model and cannot be selected from outside. In STEW, the "expert" for a task is a profile
+worn by whatever model the machine has.

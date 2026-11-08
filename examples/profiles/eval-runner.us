@@ -8,6 +8,8 @@ Its reach is what its two tools reach and nothing more: it can start an eval run
 read the run's status. It cannot read a file, run a shell or write a note, because it
 is not offered a tool that does.
 
+`requires.min_context` here is a starting estimate, not yet measured: the smallest window its cases pass with replaces it. A model without a reasoning knob can wear this profile; `reasoning` is then ignored.
+
 ```json
 {
   "stew": "2026-11-08-draft",
@@ -16,18 +18,38 @@ is not offered a tool that does.
   "version": 1,
   "for": {
     "task": "run an eval set from the phone and report it",
-    "capabilities": ["N8"]
+    "capabilities": [
+      "N8"
+    ]
   },
   "tools": ["secondbrain_eval_start", "secondbrain_eval_status"],
+  "requires": {
+    "tool_calling": true,
+    "min_context": 8192,
+    "structured_output": true,
+    "reasoning_effort": false
+  },
   "instructions": "Plan one secondbrain_eval_start with the set and the tag the request names. Ask nothing else.\nAfter the card, read secondbrain_eval_status once. Report passed of total and each failed check.",
-  "budgets": { "reads": 0, "tool_calls": 4 },
+  "budgets": {
+    "reads": 0,
+    "tool_calls": 4
+  },
   "reasoning": "low",
   "gates": {
-    "bounds": ["keys", "archive", "untrusted-shell", "sitting"],
-    "extra": ["no set other than the one named"]
+    "bounds": [
+      "keys",
+      "archive",
+      "untrusted-shell",
+      "sitting"
+    ],
+    "extra": [
+      "no set other than the one named"
+    ]
   },
   "card": "plan",
-  "success": { "check": "tool_call_args_match" },
+  "success": {
+    "check": "tool_call_args_match"
+  },
   "summary": "<set> <tag>: <passed>/<total>, failed: <case ids>"
 }
 ```

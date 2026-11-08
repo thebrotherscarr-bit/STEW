@@ -5,9 +5,15 @@
   "description": "A harness profile (a 'hat'): what an agent may do for one task family, within which budgets, behind which gates, and how done is checked. spec/profile.md.",
   "type": "object",
   "properties": {
-    "stew": { "$ref": "common.schema.json#/$defs/version" },
-    "kind": { "const": "profile" },
-    "name": { "$ref": "common.schema.json#/$defs/name" },
+    "stew": {
+      "$ref": "common.schema.json#/$defs/version"
+    },
+    "kind": {
+      "const": "profile"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/name"
+    },
     "version": {
       "description": "An integer; any change to the profile is a new version.",
       "type": "integer",
@@ -17,22 +23,65 @@
       "description": "The task family, in words, and the capability ids it serves.",
       "type": "object",
       "properties": {
-        "task": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "task": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
         "capabilities": {
           "type": "array",
-          "items": { "$ref": "common.schema.json#/$defs/id" },
+          "items": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
           "uniqueItems": true
         }
       },
-      "required": ["task"],
+      "required": [
+        "task"
+      ],
       "additionalProperties": false,
-      "patternProperties": { "^x-": {} }
+      "patternProperties": {
+        "^x-": {}
+      }
     },
     "tools": {
       "description": "The allow-list: exact tool names. Nothing else is offered. An empty list holds no tools. Reach is derived from these tools, never asserted.",
       "type": "array",
-      "items": { "$ref": "common.schema.json#/$defs/toolName" },
+      "items": {
+        "$ref": "common.schema.json#/$defs/toolName"
+      },
       "uniqueItems": true
+    },
+    "requires": {
+      "description": "What the model must offer for this profile. A profile never names a model; a binding (runtime config) maps these requirements to a local model.",
+      "type": "object",
+      "properties": {
+        "tool_calling": {
+          "description": "Native tool calls. Required whenever tools is not empty.",
+          "type": "boolean"
+        },
+        "min_context": {
+          "description": "The least context window, in tokens, the profile's cases pass with.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "structured_output": {
+          "description": "JSON-schema-constrained output.",
+          "type": "boolean"
+        },
+        "reasoning_effort": {
+          "description": "A reasoning-effort knob, used by `reasoning`. When false, `reasoning` is ignored.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "tool_calling",
+        "min_context"
+      ],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": {}
+      }
     },
     "instructions": {
       "description": "At most 8 lines added to the agent's standing instructions for this task. Names only tools in `tools`.",
@@ -43,22 +92,39 @@
       "description": "Upper bounds the runtime enforces. An absent budget means the runtime's own default, never unlimited.",
       "type": "object",
       "properties": {
-        "reads": { "description": "Reads (file, note, search) before the plan card.", "type": "integer", "minimum": 0 },
-        "tool_calls": { "description": "Tool calls in the whole run.", "type": "integer", "minimum": 0 },
-        "wall_seconds": { "description": "Wall-clock seconds for the whole run.", "type": "integer", "minimum": 1 },
-        "output_tokens": { "description": "Model output tokens for the whole run.", "type": "integer", "minimum": 1 }
+        "reads": {
+          "description": "Reads (file, note, search) before the plan card.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "tool_calls": {
+          "description": "Tool calls in the whole run.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "wall_seconds": {
+          "description": "Wall-clock seconds for the whole run.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "output_tokens": {
+          "description": "Model output tokens for the whole run.",
+          "type": "integer",
+          "minimum": 1
+        }
       },
       "additionalProperties": false,
-      "patternProperties": { "^x-": {} }
+      "patternProperties": {
+        "^x-": {}
+      }
     },
     "reasoning": {
-      "description": "The model's reasoning effort, where the model offers one.",
-      "enum": ["low", "medium", "high"]
-    },
-    "model": {
-      "description": "Optional: the model this profile was measured on, as the runtime names it (for example an Ollama tag). The runtime maps it; a declaration never names a host.",
-      "type": "string",
-      "maxLength": 200
+      "description": "The reasoning effort to ask for, where the bound model offers the knob (requires.reasoning_effort); otherwise ignored.",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
     },
     "gates": {
       "description": "The runtime's standing bounds this task touches (all are always on; naming them is for the card and the cases), and extra refusals this profile adds. A profile can add a refusal, never remove one.",
@@ -66,31 +132,51 @@
       "properties": {
         "bounds": {
           "type": "array",
-          "items": { "$ref": "common.schema.json#/$defs/name" },
+          "items": {
+            "$ref": "common.schema.json#/$defs/name"
+          },
           "uniqueItems": true
         },
         "extra": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1, "maxLength": 300 }
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
         }
       },
       "additionalProperties": false,
-      "patternProperties": { "^x-": {} }
+      "patternProperties": {
+        "^x-": {}
+      }
     },
     "card": {
       "description": "Human approval: plan = one card showing the plan and this profile before any write; every-write = a card on each write as well; none = a read or a refusal, no card.",
-      "enum": ["none", "plan", "every-write"]
+      "enum": [
+        "none",
+        "plan",
+        "every-write"
+      ]
     },
     "success": {
       "description": "The deterministic check that says the task is done: a check name the runtime's eval kit knows, with optional arguments.",
       "type": "object",
       "properties": {
-        "check": { "$ref": "common.schema.json#/$defs/toolName" },
-        "args": { "type": "object" }
+        "check": {
+          "$ref": "common.schema.json#/$defs/toolName"
+        },
+        "args": {
+          "type": "object"
+        }
       },
-      "required": ["check"],
+      "required": [
+        "check"
+      ],
       "additionalProperties": false,
-      "patternProperties": { "^x-": {} }
+      "patternProperties": {
+        "^x-": {}
+      }
     },
     "summary": {
       "description": "The one line sent to the human at the end. <placeholders> are filled by the runtime.",
@@ -99,7 +185,21 @@
       "maxLength": 300
     }
   },
-  "required": ["stew", "kind", "name", "version", "for", "tools", "gates", "card", "success", "summary"],
+  "required": [
+    "stew",
+    "kind",
+    "name",
+    "version",
+    "for",
+    "tools",
+    "requires",
+    "gates",
+    "card",
+    "success",
+    "summary"
+  ],
   "additionalProperties": false,
-  "patternProperties": { "^x-": {} }
+  "patternProperties": {
+    "^x-": {}
+  }
 }

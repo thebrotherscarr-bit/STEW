@@ -1,0 +1,32 @@
+# Binding: steward-gpt-oss-20b (one way, not the way)
+
+The reference implementation's binding: `steward:1`, an Ollama model built from `gpt-oss:20b`
+with a 65536-token context window, on one 16 GB GPU. It is **one example of a binding**. It is not a
+default and not a requirement. Any model that provides what a profile requires can wear that
+profile, on any runtime (Ollama or an OpenAI-compatible server), on any hardware. Run the
+conformance kit with your own binding to see which profiles pass on your machine.
+
+A binding is runtime config. It is never part of a board, and no profile or task names one. It
+is the one place a model, an endpoint and a machine are named. Results are reported against it.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "binding",
+  "name": "steward-gpt-oss-20b",
+  "api": "ollama",
+  "endpoint": "http://127.0.0.1:11434",
+  "model": "steward:1",
+  "provides": {
+    "tool_calling": true,
+    "context": 65536,
+    "structured_output": true,
+    "reasoning_effort": true
+  },
+  "hardware": "one 16 GB GPU",
+  "options": {
+    "num_ctx": 65536,
+    "keep_alive": "30m"
+  }
+}
+```

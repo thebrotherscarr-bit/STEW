@@ -11,7 +11,8 @@ Status: outline for `2026-11-08-draft`. The validator part exists today. The run
 ## The runtime kit (to be written)
 
 The runtime kit is a set of STEW **eval sets** (`kind: eval`), the same format a profile is promoted on
-(spec/evidence.md). Every check is deterministic, and every case runs once and leaves a transcript. A runtime
+(spec/evidence.md). It is each adopter's acceptance test on their own hardware and model. Every result is
+recorded against the binding it ran on (spec/binding.md). Every check is deterministic, and every case runs once and leaves a transcript. A runtime
 passes a set when it meets the set's bar.
 
 | Set | Cases (each names a kit profile) | Checks |
@@ -26,6 +27,7 @@ passes a set when it meets the set's bar.
 | `summary` | each outcome | exactly one `stew.summary.sent` on the task's channel, stating the outcome |
 | `versions` | a declaration of an unsupported version, and one with an unknown `x-` member | the first is refused with the supported list. The second loads, with the `x-` member ignored |
 | `portability` | the board folder moved to a new root, with only the runtime config changed | it validates and loads |
+| `binding-fit` | a profile whose `requires` the binding does not meet | the task is rejected with the reason, and never run on that model |
 
 ## Mapping to the reference implementation's eval format
 

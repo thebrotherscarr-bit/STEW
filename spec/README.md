@@ -12,7 +12,7 @@ That applies to every file in `spec/`.
 STEW is a specification for **harnessing agents on local hardware**. Its subject is the harness: the code
 around a model that decides, for one task, which tools the model is offered, how much it may read and call,
 what it is refused whatever it says, when a human must approve, and how the result is checked and reported.
-STEW does not specify the model, the tool protocol (MCP does that), agent-to-agent transport (A2A) or the
+STEW gives the pieces and the rules, not the agent: it does not specify or require any model, the tool protocol (MCP does that), agent-to-agent transport (A2A) or the
 user-interface stream (AG-UI). It names those where it relies on them.
 
 The design rests on four ideas:
@@ -31,6 +31,7 @@ The design rests on four ideas:
 |---|---|---|
 | 1 | [declarations.md](declarations.md) | the `.us` format: Markdown with one JSON block; the header; extensions |
 | 2 | [profile.md](profile.md) | the profile ("hat"): tools, instructions, budgets, reasoning, gates, card, success, summary |
+| 2a | [binding.md](binding.md) | bindings: your model on your hardware; model requirements; choosing a model (informative) |
 | 3 | [task.md](task.md) | the task card |
 | 4 | [blackboard.md](blackboard.md) | the board, and its operations: post, claim, release, answer, cancel, report |
 | 5 | [lifecycle.md](lifecycle.md) | the state machine, with its mapping to A2A |
@@ -57,3 +58,5 @@ disagreement is a defect to report.
   a **task card**, which is a unit of work. A bare "card" in this spec means an approval card.
 - **Channel**: a place requests come from and summaries go to, such as a console, a phone or a schedule.
 - **Accelerator**: the GPU or NPU that holds the model while a harness runs.
+- **Binding**: runtime config that names the model, its server and the hardware, and states what the model
+  provides. It is the only place a model is named.

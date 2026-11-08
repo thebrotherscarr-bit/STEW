@@ -31,7 +31,7 @@ from urllib.parse import urljoin, urldefrag
 
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_DIR = ROOT / "schema"
-KINDS = ("profile", "task", "board", "eval", "record")
+KINDS = ("profile", "task", "board", "eval", "record", "binding")
 BLOCK_RE = re.compile(r"^```json[ \t]*\n(.*?)^```[ \t]*$", re.DOTALL | re.MULTILINE)
 MAX_INSTRUCTION_LINES = 8
 
@@ -251,6 +251,10 @@ def main(argv: list[str]) -> int:
             lines = [l for l in decl.get("instructions", "").splitlines() if l.strip()]
             if len(lines) > MAX_INSTRUCTION_LINES:
                 errs.append(f"instructions have {len(lines)} lines; at most {MAX_INSTRUCTION_LINES}")
+            if decl.get("tools") and not decl.get("requires", {}).get("tool_calling"):
+                errs.append("a profile that offers tools requires tool_calling: true")
+        if kind == "binding":
+            return errs  # a binding is runtime config: it names a model and an endpoint by design
         return errs + portability(decl)
 
     files = collect(argv)
@@ -307,6 +311,21 @@ def main(argv: list[str]) -> int:
                 if ref and not known(ref):
                     print(f"FAIL {path}: names profile {ref!r}, which no declaration given defines")
                     failures += 1
+
+    # Informational: which profiles each binding can run (spec/binding.md). Never a failure.
+    for bpath, b in [(p, d) for p, d in declared if d.get("kind") == "binding"]:
+        prov = b.get("provides", {})
+        fits, misses = [], []
+        for _, d in declared:
+            if d.get("kind") != "profile":
+                continue
+            req = d.get("requires", {})
+            short = [k for k in ("tool_calling", "structured_output") if req.get(k) and not prov.get(k)]
+            if req.get("min_context", 0) > prov.get("context", 0):
+                short.append(f"context {prov.get('context')} < {req.get('min_context')}")
+            (misses if short else fits).append(f"{d['name']}@{d['version']}" + (f" ({', '.join(short)})" if short else ""))
+        print(f"info {bpath}: binding {b.get('name')} ({b.get('model')}) fits {', '.join(fits) or 'no profile'}"
+              + (f"; does not fit {', '.join(misses)}" if misses else ""))
 
     for path, rows in ledgers:
         state: dict[str, str] = {}

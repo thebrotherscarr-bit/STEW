@@ -17,10 +17,13 @@ STEW implementation safe. **Full** is what makes it STEW all the way through.
 | Level | MUST |
 |---|---|
 | Core | offer only a profile's `tools`. Enforce every board bound at its `at` points, in code. Refuse secrets. Raise cards as `card` says, with an unanswered card counting as a No. Never answer its own cards. Append every operation to an append-only ledger. Load only supported versions |
-| Full | Core, plus budgets and reasoning. Instructions that name only offered tools. Tabling and reload on one accelerator, with durable checkpoints. A transcript per run. Summaries on the task's channel. Promotion only on recorded eval evidence and the human's approval. Host-neutral operation from runtime config (spec/portability.md) |
+| Full | Core, plus bindings: a task runs only on a binding that meets its profile's `requires`, and results are recorded per binding. Budgets and reasoning. Instructions that name only offered tools. Tabling and reload on one accelerator, with durable checkpoints. A transcript per run. Summaries on the task's channel. Promotion only on recorded eval evidence and the human's approval. Host-neutral operation from runtime config (spec/portability.md) |
 
 A runtime proves conformance by passing the conformance kit's eval sets (conformance/README.md) under its
-own harness. A conformance claim names the STEW version and the kit's set versions it passed.
+own harness. The kit is each adopter's **acceptance test on their own hardware and model**. A conformance
+claim names the STEW version, the kit's set versions and the **binding** (model and hardware) it passed on.
+The runtime-only checks (allow-list, bounds, cards, ledger) SHOULD pass on every binding, because they are
+held in code. Which profiles pass is a property of the binding.
 
 ## Board
 

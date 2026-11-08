@@ -5,9 +5,15 @@
   "description": "One line of a board's append-only ledger. Its id, source, type, time, subject and data members carry CloudEvents 1.0 attribute names and meanings, so a record becomes a CloudEvent by adding specversion. spec/records.md.",
   "type": "object",
   "properties": {
-    "stew": { "$ref": "common.schema.json#/$defs/version" },
-    "kind": { "const": "record" },
-    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "stew": {
+      "$ref": "common.schema.json#/$defs/version"
+    },
+    "kind": {
+      "const": "record"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
     "seq": {
       "description": "The record's position in its ledger, from 1, with no gaps.",
       "type": "integer",
@@ -40,53 +46,147 @@
         "stew.correction"
       ]
     },
-    "time": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "time": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
     "subject": {
       "description": "The task id, eval set name or profile ref the record is about.",
       "type": "string",
       "minLength": 1,
       "maxLength": 200
     },
-    "data": { "type": "object" }
+    "data": {
+      "type": "object"
+    }
   },
-  "required": ["stew", "kind", "id", "seq", "source", "type", "time", "subject", "data"],
+  "required": [
+    "stew",
+    "kind",
+    "id",
+    "seq",
+    "source",
+    "type",
+    "time",
+    "subject",
+    "data"
+  ],
   "additionalProperties": false,
-  "patternProperties": { "^x-": {} },
+  "patternProperties": {
+    "^x-": {}
+  },
   "allOf": [
     {
-      "if": { "properties": { "type": { "const": "stew.task.state" } } },
+      "if": {
+        "properties": {
+          "type": {
+            "const": "stew.task.state"
+          }
+        }
+      },
       "then": {
         "properties": {
           "data": {
             "type": "object",
             "properties": {
-              "from": { "$ref": "common.schema.json#/$defs/taskState" },
-              "to": { "$ref": "common.schema.json#/$defs/taskState" },
-              "profile": { "$ref": "common.schema.json#/$defs/profileRef" },
-              "reason": { "type": "string" }
+              "from": {
+                "$ref": "common.schema.json#/$defs/taskState"
+              },
+              "to": {
+                "$ref": "common.schema.json#/$defs/taskState"
+              },
+              "profile": {
+                "$ref": "common.schema.json#/$defs/profileRef"
+              },
+              "reason": {
+                "type": "string"
+              }
             },
-            "required": ["from", "to"]
+            "required": [
+              "from",
+              "to"
+            ]
           }
         }
       }
     },
     {
-      "if": { "properties": { "type": { "const": "stew.profile.promoted" } } },
+      "if": {
+        "properties": {
+          "type": {
+            "const": "stew.profile.promoted"
+          }
+        }
+      },
       "then": {
         "properties": {
           "data": {
             "type": "object",
             "properties": {
-              "profile": { "$ref": "common.schema.json#/$defs/profileRef" },
-              "replaces": { "$ref": "common.schema.json#/$defs/profileRef" },
+              "profile": {
+                "$ref": "common.schema.json#/$defs/profileRef"
+              },
+              "replaces": {
+                "$ref": "common.schema.json#/$defs/profileRef"
+              },
               "evidence": {
-                "description": "The eval runs (record ids) that met the bar.",
+                "description": "The eval runs (record ids) that met the bar on this binding.",
                 "type": "array",
-                "items": { "$ref": "common.schema.json#/$defs/id" },
+                "items": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
                 "minItems": 1
+              },
+              "binding": {
+                "$ref": "common.schema.json#/$defs/bindingRef"
               }
             },
-            "required": ["profile", "evidence"]
+            "required": [
+              "profile",
+              "evidence",
+              "binding"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "stew.eval.run"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "set": {
+                "type": "string"
+              },
+              "profile": {
+                "$ref": "common.schema.json#/$defs/profileRef"
+              },
+              "binding": {
+                "$ref": "common.schema.json#/$defs/bindingRef"
+              },
+              "results": {
+                "type": "object"
+              },
+              "transcripts": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/relativePath"
+                }
+              }
+            },
+            "required": [
+              "set",
+              "profile",
+              "binding",
+              "results"
+            ]
           }
         }
       }

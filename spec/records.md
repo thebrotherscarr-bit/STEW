@@ -31,11 +31,11 @@ without translation.
 | `stew.card.answered` | `card`, `answer` (`approve`, `deny` or `none`), `channel` |
 | `stew.bound.refused` | `bound`, `at` (`request`, `plan` or `call`), `what`: the words that hit it, with secrets redacted |
 | `stew.harness.tabled` | `checkpoint` (relative path), `reason` |
-| `stew.harness.loaded` | `profile` and `tools`, or `checkpoint` and `restored` |
+| `stew.harness.loaded` | `profile`, `tools` and `binding` (its name), or `checkpoint` and `restored` |
 | `stew.harness.unloaded` | `profile`, `model_released` |
 | `stew.summary.sent` | `channel`, `text` |
-| `stew.eval.run` | `set`, `profile`, `results`, `transcripts` |
-| `stew.profile.promoted` | `profile`, `replaces`, `evidence` |
+| `stew.eval.run` | `set`, `profile`, `binding` (`name`, `model`, `hardware`), `results`, `transcripts` |
+| `stew.profile.promoted` | `profile`, `replaces`, `evidence`, `binding` |
 | `stew.correction` | `corrects` (a record id), `note`. A mistake is annotated, never removed |
 
 ## Requirements

@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thebrotherscarr-bit/STEW/main/schema/2026-11-08-draft/binding.schema.json",
+  "title": "STEW binding",
+  "description": "Runtime config, not part of a board: binds profiles' model requirements to one local model on one machine. spec/binding.md.",
+  "type": "object",
+  "properties": {
+    "stew": {
+      "$ref": "common.schema.json#/$defs/version"
+    },
+    "kind": {
+      "const": "binding"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/name"
+    },
+    "api": {
+      "description": "How the runtime talks to the model server.",
+      "enum": [
+        "ollama",
+        "openai-compatible"
+      ]
+    },
+    "endpoint": {
+      "description": "The model server's base URL. SHOULD be loopback.",
+      "type": "string",
+      "pattern": "^https?://[^\\s/]+(/[^\\s]*)?$"
+    },
+    "model": {
+      "description": "The model as the server names it (for example an Ollama tag).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "provides": {
+      "description": "What this model offers, measured or as its server reports it; matched against each profile's requires.",
+      "type": "object",
+      "properties": {
+        "tool_calling": {
+          "type": "boolean"
+        },
+        "context": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "structured_output": {
+          "type": "boolean"
+        },
+        "reasoning_effort": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "tool_calling",
+        "context"
+      ],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": {}
+      }
+    },
+    "hardware": {
+      "description": "The machine, in words, as results are reported against it (for example 'one 16 GB GPU').",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "options": {
+      "description": "Server options passed through (for example num_ctx, keep_alive).",
+      "type": "object"
+    }
+  },
+  "required": [
+    "stew",
+    "kind",
+    "name",
+    "api",
+    "endpoint",
+    "model",
+    "provides",
+    "hardware"
+  ],
+  "additionalProperties": false,
+  "patternProperties": {
+    "^x-": {}
+  }
+}
