@@ -1,0 +1,39 @@
+# Board: digest
+
+An automation is a task card that a schedule posts, again and again, with nobody watching. So
+the `schedule` channel here may only **read** and cannot answer a card: whatever runs on it
+unattended changes nothing. The `read-only-channel` bound refuses, before any model call, a
+scheduled task whose hat could change something.
+
+When to fire is runtime config (your system's scheduler, or `--every` in the sample runner),
+not part of the board.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "board",
+  "name": "digest",
+  "supports": ["2026-11-08-draft"],
+  "bounds": [
+    {
+      "id": "keys",
+      "rule": "No secret file (.env, a private key, a credentials file) is read, printed or passed on.",
+      "at": ["request", "call"]
+    },
+    {
+      "id": "read-only-channel",
+      "rule": "A channel declared read-only asks for no change; such a request is refused.",
+      "at": ["request"]
+    }
+  ],
+  "profiles": ["profiles/daily-digest.us"],
+  "default_profile": "daily-digest",
+  "channels": [
+    { "name": "console", "may": "change", "cards": true },
+    { "name": "schedule", "may": "read", "cards": false }
+  ],
+  "accelerators": 1,
+  "unanswered_card": 600,
+  "ledger": "run/ledger.jsonl"
+}
+```

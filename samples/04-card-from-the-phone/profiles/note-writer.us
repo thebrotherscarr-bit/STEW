@@ -1,0 +1,47 @@
+# Profile: note-writer
+
+A hat that changes something, so it asks first. `card: plan` means that before any tool that
+changes something runs, the runtime raises one card: the plan, this profile's `name@version`,
+its tools and its success check. Approve lets the run go on. Deny, or no answer, ends it, and
+nothing is changed.
+
+The card is raised by the runtime, in code, when the model first calls `write_note`. The model
+cannot skip it, and it cannot answer it.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "profile",
+  "name": "note-writer",
+  "version": 1,
+  "for": {
+    "task": "add a line to one note"
+  },
+  "tools": ["read_note", "write_note"],
+  "requires": {
+    "tool_calling": true,
+    "min_context": 4096,
+    "structured_output": false,
+    "reasoning_effort": false
+  },
+  "instructions": "Call read_note on the note the request names, then call write_note once with its whole new text.\nKeep every line the note had, and add only what the request asks for.",
+  "budgets": {
+    "reads": 2,
+    "tool_calls": 4,
+    "wall_seconds": 180
+  },
+  "reasoning": "low",
+  "gates": {
+    "bounds": ["keys"],
+    "extra": ["change only the note the request names"]
+  },
+  "card": "plan",
+  "success": {
+    "check": "tool_called",
+    "args": {
+      "tool": "write_note"
+    }
+  },
+  "summary": "<outcome>: <reply>"
+}
+```

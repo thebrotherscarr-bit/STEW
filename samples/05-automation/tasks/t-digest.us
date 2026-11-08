@@ -1,0 +1,18 @@
+# Task: the digest, posted by the schedule
+
+The template the schedule posts each time it fires. A card id is unique on its board, so each
+firing is posted as a new card: `t-digest`, then `t-digest.2`, `t-digest.3` and so on. The card
+itself is never edited, and the ledger keeps every firing.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "task",
+  "id": "t-digest",
+  "board": "digest",
+  "profile": "daily-digest@1",
+  "ask": "Give me the digest of my notes.",
+  "source": "schedule",
+  "posted_at": "2026-11-08T07:00:00Z"
+}
+```

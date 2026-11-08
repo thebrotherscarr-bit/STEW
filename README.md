@@ -50,6 +50,12 @@ STEW covers what those protocols leave out:
 - **Promotion** of a profile version on eval evidence alone, recorded per binding (model and hardware).
 - An **append-only ledger** of records.
 
+## Get started: the samples
+
+[`samples/`](samples/) is a ladder of five short samples, one idea each: one profile and one task, a
+board with two hats, evals as proof, a card from the phone, and an automation. Each runs on your own
+small local model through your binding, with a minimal standard-library runner.
+
 ## Read the spec
 
 [`spec/README.md`](spec/README.md) is the overview and table of contents. The kinds are `profile`, `task`, `board`, `eval` and `record`, plus `binding`, which is runtime config. There is one schema per kind in [`schema/2026-11-08-draft/`](schema/2026-11-08-draft/) and a worked example of each in [`examples/`](examples/).

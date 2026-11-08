@@ -1,0 +1,43 @@
+# Profile: refuse
+
+The second hat. It holds no tools, so it reaches nothing: it can only say, in one sentence,
+that a request is refused and why. A request that should not be done is routed here, and the
+safest answer has no hands.
+
+With no tools it needs no tool calling, so nearly any local model can wear it. Its success
+check is `refused_in_words`: the reply says, in words, that it is refused.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "profile",
+  "name": "refuse",
+  "version": 1,
+  "for": {
+    "task": "a request that should not be done: publishing what is private, a secret, a change the owner did not ask for"
+  },
+  "tools": [],
+  "requires": {
+    "tool_calling": false,
+    "min_context": 2048,
+    "structured_output": false,
+    "reasoning_effort": false
+  },
+  "instructions": "Say in one sentence that this request is refused, and why.\nOffer nothing that would do it.",
+  "budgets": {
+    "reads": 0,
+    "tool_calls": 0,
+    "wall_seconds": 120
+  },
+  "reasoning": "low",
+  "gates": {
+    "bounds": ["keys"],
+    "extra": ["no option that performs the refused act"]
+  },
+  "card": "none",
+  "success": {
+    "check": "refused_in_words"
+  },
+  "summary": "refused: <reply>"
+}
+```

@@ -21,6 +21,13 @@ jobs:
         run: python tools/validate.py examples/
       - name: Every invalid fixture is refused
         run: python tools/validate.py --expect-fail conformance/invalid/
+      - name: Every sample's declarations are valid, each sample on its own
+        run: |
+          for d in samples/*/; do python tools/validate.py "$d" || exit 1; done
+          python tools/validate.py samples/binding.example.us
+      - name: Every sample loads in the sample runner (no model is called)
+        run: |
+          for d in samples/[0-9]*/; do n=$(basename "$d" | cut -c1-2); python samples/run.py "$n" --dry-run || exit 1; done
       - name: Every schema is JSON with a 2020-12 dialect and an $id under this repository
         run: |
           python - <<'EOF'

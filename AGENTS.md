@@ -5,16 +5,20 @@ Guidance for coding agents working in this repository.
 ## What this repository is
 
 The STEW specification: prose in `spec/`, JSON Schemas in `schema/<version>/`, examples in `examples/`,
-conformance fixtures in `conformance/`, and the validator in `tools/validate.py`.
+conformance fixtures in `conformance/`, the validator in `tools/validate.py`, and the getting-started
+samples in `samples/` (with their minimal runner, `samples/run.py`).
 
 ## Check before you finish
 
 ```sh
 python tools/validate.py examples/
 python tools/validate.py --expect-fail conformance/invalid/
+for d in samples/*/; do python tools/validate.py "$d"; done
 ```
 
-Both must end `PASSED`. The validator uses only the Python standard library (3.9+). Do not add dependencies.
+Every run must end `PASSED`. `python samples/run.py <nn> --dry-run` loads a sample without calling a
+model. The validator and the sample runner use only the Python standard library (3.9+). Do not add
+dependencies.
 
 ## Rules
 

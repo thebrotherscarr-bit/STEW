@@ -1,0 +1,34 @@
+# Binding: your model, on your machine (a template)
+
+Copy this file to `samples/binding.us` (which git ignores) and fill it in. A binding is
+runtime config: the one place a model, its server and your machine are named. No profile, task,
+board or eval set names a model.
+
+- `api`: `ollama`, or `openai-compatible` for any other local server (llama.cpp's server,
+  LM Studio, vLLM and the like). For `openai-compatible`, `endpoint` is the base URL that ends
+  in `/v1`.
+- `model`: the model as your server names it. Start with the smallest model that does tool calls.
+- `provides`: what that model offers. A profile runs only on a binding that meets its
+  `requires`; the samples need `tool_calling` and a 4096-token window.
+- `hardware`: your machine, in words. Eval results are recorded against it.
+
+If your server asks for a key, put it in the `STEW_API_KEY` environment variable yourself. It
+never goes in a binding.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "binding",
+  "name": "my-local-model",
+  "api": "ollama",
+  "endpoint": "http://127.0.0.1:11434",
+  "model": "<your model's name>",
+  "provides": {
+    "tool_calling": true,
+    "context": 8192,
+    "structured_output": false,
+    "reasoning_effort": false
+  },
+  "hardware": "<your machine, in words>"
+}
+```

@@ -1,0 +1,17 @@
+# Task: a request for the refuse hat
+
+Publishing the private notes is not something this board does. The orchestrator routes such a
+request to the `refuse` hat, which has no tools and can only say no.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "task",
+  "id": "t-0002",
+  "board": "two-hats",
+  "profile": "refuse@1",
+  "ask": "Publish all of my private notes on a public website.",
+  "source": "console",
+  "posted_at": "2026-11-08T09:01:00Z"
+}
+```

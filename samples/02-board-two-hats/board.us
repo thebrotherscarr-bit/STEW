@@ -1,0 +1,42 @@
+# Board: two-hats
+
+A board is where task cards are posted, claimed and reported. It holds the bounds every run
+on it keeps, whatever hat is worn, and it offers two hats: `note-reader` and `refuse`.
+
+- **keys**: no secret file is read, printed or passed on. The runtime holds it in code, at
+  the request (before any model call) and at every tool call.
+- **read-only-channel**: the `chat` channel may only read. A request from it that would need
+  a change is refused before it is claimed.
+
+The ledger path is relative to this folder. Where the folder is, and which model serves it,
+come from runtime config, never from here.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "board",
+  "name": "two-hats",
+  "supports": ["2026-11-08-draft"],
+  "bounds": [
+    {
+      "id": "keys",
+      "rule": "No secret file (.env, a private key, a credentials file) is read, printed or passed on.",
+      "at": ["request", "call"]
+    },
+    {
+      "id": "read-only-channel",
+      "rule": "A channel declared read-only asks for no change; such a request is refused.",
+      "at": ["request"]
+    }
+  ],
+  "profiles": ["profiles/note-reader.us", "profiles/refuse.us"],
+  "default_profile": "note-reader",
+  "channels": [
+    { "name": "console", "may": "change", "cards": true },
+    { "name": "chat", "may": "read", "cards": false }
+  ],
+  "accelerators": 1,
+  "unanswered_card": 600,
+  "ledger": "run/ledger.jsonl"
+}
+```

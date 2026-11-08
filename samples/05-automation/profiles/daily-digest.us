@@ -1,0 +1,42 @@
+# Profile: daily-digest
+
+A read-only hat for an unattended run: list the notes, read each one, and reply with one line
+per note. It raises no card and changes nothing, which is what lets it run with nobody there.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "profile",
+  "name": "daily-digest",
+  "version": 1,
+  "for": {
+    "task": "a short digest of the notes, on a schedule"
+  },
+  "tools": ["list_notes", "read_note"],
+  "requires": {
+    "tool_calling": true,
+    "min_context": 4096,
+    "structured_output": false,
+    "reasoning_effort": false
+  },
+  "instructions": "Call list_notes, then read_note on each note.\nReply with one line per note: its name, then its first line.",
+  "budgets": {
+    "reads": 6,
+    "tool_calls": 6,
+    "wall_seconds": 240
+  },
+  "reasoning": "low",
+  "gates": {
+    "bounds": ["keys", "read-only-channel"],
+    "extra": []
+  },
+  "card": "none",
+  "success": {
+    "check": "tool_called",
+    "args": {
+      "tool": "list_notes"
+    }
+  },
+  "summary": "digest (<outcome>): <reply>"
+}
+```

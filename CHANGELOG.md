@@ -23,3 +23,9 @@ The first draft.
   binding. The reference implementation's binding is one example, not a default.
 - **The validator** `tools/validate.py` (standard library only), the conformance fixtures in
   `conformance/invalid/`, and CI that runs both on every pull request.
+- **Samples 01 to 05** in `samples/`, a getting-started ladder after Microsoft Agent Framework's
+  `01-get-started`: one profile and one task, a board with two hats, evals as proof, a card from the
+  phone, and an automation. Each is a folder of `.us` declarations with its README, run on any local
+  model through a binding (`samples/binding.example.us`) by `samples/run.py`, a minimal
+  standard-library runtime. CI validates every sample's declarations and loads each one with
+  `--dry-run`. Steward is named as the full reference implementation.
