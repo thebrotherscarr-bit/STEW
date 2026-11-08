@@ -13,7 +13,17 @@ called `.us` files: Markdown for people, with exactly one JSON block for machine
 > "This is going to be released as a standardized MIT spec for agent harnessing on local hardware, as a
 > research project."
 >
+> "we can set it up with the smallest model we need to run the stuff, Steward is just a partially rolled
+> version of gpt-oss. If someone has different hardware and all that, we shouldnt be locking them into this
+> exact setup, the idea is that anyone anywhere can use this spec for their local hardware and harnessing
+> needs, kind of the way that MAF gives you all the pieces, and doesnt actually show you the agent, just
+> kind of tells how its supposed to work, and you make it your own on your hardware."
+>
 > The operator, 2026-11-08
+
+STEW gives you **the pieces and the rules, not the agent**. No declaration names a model. A profile says
+what a model must offer (`requires`), and a **binding** in your runtime's config maps that to whatever
+model fits your hardware.
 
 ## The layer it fills
 
@@ -32,16 +42,17 @@ agent do for one task:
 
 STEW covers what those protocols leave out:
 
-- **Profiles** ("hats"): an allow-list of tools, a few lines of instructions, budgets, reasoning effort, gates enforced in code, a human-approval card policy, a success check and a summary line.
+- **Profiles** ("hats"): an allow-list of tools, model requirements (never a model), a few lines of instructions, budgets, reasoning effort, gates enforced in code, a human-approval card policy, a success check and a summary line.
+- **Bindings**: runtime config that maps model requirements to a local model on your hardware.
 - **Task cards** posted on a **blackboard**.
 - A **lifecycle** that ends with the harness unloaded.
 - **Orchestration** on a single accelerator.
-- **Promotion** of a profile version on eval evidence alone.
+- **Promotion** of a profile version on eval evidence alone, recorded per binding (model and hardware).
 - An **append-only ledger** of records.
 
 ## Read the spec
 
-[`spec/README.md`](spec/README.md) is the overview and table of contents. The kinds are `profile`, `task`, `board`, `eval` and `record`. There is one schema per kind in [`schema/2026-11-08-draft/`](schema/2026-11-08-draft/) and a worked example of each in [`examples/`](examples/).
+[`spec/README.md`](spec/README.md) is the overview and table of contents. The kinds are `profile`, `task`, `board`, `eval` and `record`, plus `binding`, which is runtime config. There is one schema per kind in [`schema/2026-11-08-draft/`](schema/2026-11-08-draft/) and a worked example of each in [`examples/`](examples/).
 
 ## Validate declarations
 
@@ -53,18 +64,27 @@ The validator uses only the Python standard library (3.9+). CI runs it on every 
 
 ## Getting started on your own hardware
 
-STEW is meant to work on anyone's machine with nothing hosted.
+STEW is meant to run on anyone's machine with nothing hosted, and with any model that fits.
 
-1. **Install a local model server.** Use [Ollama](https://ollama.com/), then pull a model that supports tool calls (`ollama pull <model>`).
-2. **Install the reference implementation.** Steward ([github.com/thebrotherscarr-bit/Steward](https://github.com/thebrotherscarr-bit/Steward)) is the agent. Jesster ([github.com/thebrotherscarr-bit/Jesster](https://github.com/thebrotherscarr-bit/Jesster)) is the desktop app that shows cards and runs the stack. Follow Steward's README.
-3. **First run.** Point the runtime's config at a folder for your board. Copy [`examples/board.us`](examples/board.us) and the profiles into it, then edit the channels and bounds. Model names, folders and accounts belong in the runtime's config, never in a declaration (spec/portability.md).
-4. **Check your declarations** with `python tools/validate.py <your board folder>`.
+1. **Install a local model runtime.** Use [Ollama](https://ollama.com/) or any OpenAI-compatible local server.
+2. **Pick a model that fits your hardware and bind it.** Write a binding: the model, its server, and what it
+   provides (tool calling, context window). Start with the smallest model that could do the job.
+   [spec/binding.md](spec/binding.md) has an informative table by accelerator memory. The reference
+   implementation's binding (`gpt-oss:20b` on one 16 GB GPU) is
+   [one way](examples/bindings/steward-gpt-oss-20b.us), not a requirement.
+3. **Run the conformance kit** with your binding ([conformance/](conformance/README.md)). It is your
+   acceptance test on your machine.
+4. **See which profiles pass.** Those are the profiles your machine can wear. Results are recorded per
+   binding, so the same profile can be proven on each model you try.
 
-The reference implementation is still being moved onto STEW declarations, so step 3 is the target state rather than today's.
+Check your declarations at any time with `python tools/validate.py <folder>`. The runtime kit and the
+reference implementation's STEW support are in progress (CHANGELOG.md).
 
 ## Reference implementation
 
-The reference implementation is **Steward** (an agent on Microsoft Agent Framework) together with **Jesster** (the desktop centre that carries cards to the console and the phone). STEW's profile, eval case and operation come from Steward's own decision records (ADR-0012, 0014, 0016, 0018 and specs 002 to 004).
+The reference implementation is **Steward** (an agent on Microsoft Agent Framework) together with **Jesster** (the desktop centre that carries cards to the console and the phone). STEW's profile, eval case and operation come from Steward's own decision records (ADR-0012, 0014, 0016, 0018 and specs 002 to 004). It shows one way to build a STEW runtime. It is not the way, and it is not required.
+
+The agent framework is yours to choose. STEW names the pieces and the rules, much as Microsoft Agent Framework gives you its pieces without showing you an agent.
 
 ## Status and versioning
 

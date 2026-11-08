@@ -2,7 +2,8 @@
 
 A single record shown as a declaration. In a ledger it is one line; here it stands alone
 to show a promotion: eval-runner version 2 replaces version 1 because it met the bar on
-the same cases, twice in a row. The evidence names the eval runs.
+the same cases, twice in a row, on one binding. The evidence names the eval runs. On another
+binding, the same profile is proven again: a promotion holds for the binding it was measured on.
 
 ```json
 {
@@ -26,6 +27,11 @@ the same cases, twice in a row. The evidence names the eval runs.
       "passed": 3,
       "of": 3,
       "runs_in_a_row": 2
+    },
+    "binding": {
+      "name": "steward-gpt-oss-20b",
+      "model": "steward:1",
+      "hardware": "one 16 GB GPU"
     }
   }
 }

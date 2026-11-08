@@ -28,7 +28,8 @@ Runs one eval set from the phone and reports it.
 3. The JSON block MUST parse as a JSON object ([RFC 8259](https://www.rfc-editor.org/rfc/rfc8259)).
 4. The object MUST have the header members `stew` and `kind`, and SHOULD list them first:
    - `stew` is the STEW version the declaration is written to (spec/versioning.md).
-   - `kind` is one of `profile`, `task`, `board`, `eval` or `record`.
+   - `kind` is one of `profile`, `task`, `board`, `eval`, `record` or `binding`. A `binding` is runtime config, kept
+     with the runtime and never in a board folder (spec/binding.md).
 5. The object MUST validate against the schema for its version and kind:
    `schema/<stew>/<kind>.schema.json` (JSON Schema 2020-12).
 6. A processor MUST NOT read meaning from the Markdown around the block.

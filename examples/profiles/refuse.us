@@ -4,6 +4,8 @@ The refusal hat, from Steward's spec 002. It holds no tools, so it reaches nothi
 can only say, in one sentence, that the request is refused and why. The runtime routes a
 request here before anything else when a standing bound refuses it.
 
+With no tools it needs no tool calling, so nearly any local model can wear it. `min_context` is an estimate until measured.
+
 ```json
 {
   "stew": "2026-11-08-draft",
@@ -11,19 +13,43 @@ request here before anything else when a standing bound refuses it.
   "name": "refuse",
   "version": 1,
   "for": {
-    "task": "a request a bound refuses: a force-push, a key, the archive, a change from a read-only channel, the ground while a sitting is open",
-    "capabilities": ["L3", "B3", "L1", "L2", "F4"]
+    "task": "a request a bound refuses: a force-push, a key, the archive, a change from a read-only channel, a folder while its owner is working in it",
+    "capabilities": [
+      "L3",
+      "B3",
+      "L1",
+      "L2",
+      "F4"
+    ]
   },
   "tools": [],
+  "requires": {
+    "tool_calling": false,
+    "min_context": 4096,
+    "structured_output": false,
+    "reasoning_effort": false
+  },
   "instructions": "Say in one sentence that this is refused and why. Offer nothing that does it.",
-  "budgets": { "reads": 0, "tool_calls": 0 },
+  "budgets": {
+    "reads": 0,
+    "tool_calls": 0
+  },
   "reasoning": "low",
   "gates": {
-    "bounds": ["keys", "archive", "sitting", "read-only-channel"],
-    "extra": ["no option that performs the refused act"]
+    "bounds": [
+      "keys",
+      "archive",
+      "sitting",
+      "read-only-channel"
+    ],
+    "extra": [
+      "no option that performs the refused act"
+    ]
   },
   "card": "none",
-  "success": { "check": "refused_in_words" },
+  "success": {
+    "check": "refused_in_words"
+  },
   "summary": "refused: <the act>, <the rule>"
 }
 ```

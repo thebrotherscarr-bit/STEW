@@ -43,14 +43,67 @@
       "description": "The two members every declaration starts with.",
       "type": "object",
       "properties": {
-        "stew": { "$ref": "#/$defs/version" },
-        "kind": { "enum": ["profile", "task", "board", "eval", "record"] }
+        "stew": {
+          "$ref": "#/$defs/version"
+        },
+        "kind": {
+          "enum": [
+            "profile",
+            "task",
+            "board",
+            "eval",
+            "record",
+            "binding"
+          ]
+        }
       },
-      "required": ["stew", "kind"]
+      "required": [
+        "stew",
+        "kind"
+      ]
     },
     "taskState": {
       "description": "The task lifecycle (spec/lifecycle.md). submitted, working, input-required, completed, failed, canceled and rejected are A2A TaskState names; claimed, reported and unloaded are STEW's.",
-      "enum": ["submitted", "claimed", "working", "input-required", "completed", "failed", "canceled", "rejected", "reported", "unloaded"]
+      "enum": [
+        "submitted",
+        "claimed",
+        "working",
+        "input-required",
+        "completed",
+        "failed",
+        "canceled",
+        "rejected",
+        "reported",
+        "unloaded"
+      ]
+    },
+    "bindingRef": {
+      "description": "What a result was measured on: the binding's name, model and hardware.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/name"
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "hardware": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      },
+      "required": [
+        "name",
+        "model",
+        "hardware"
+      ],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": {}
+      }
     }
   }
 }

@@ -8,6 +8,8 @@ medium is the model's own default reasoning effort.
 The bound ids are the board's (see `../board.us`). Steward's own file calls the
 read-only-channel bound `whatsapp`; a portable declaration names the rule, not the app.
 
+The profile names no model. `requires` says what any model must offer to wear it: 65536 tokens is the window the reference implementation measured it with, and the plan card's structured output and the reasoning knob are used. Which model meets that on a given machine is a binding's business (`../bindings/`).
+
 ```json
 {
   "stew": "2026-11-08-draft",
@@ -120,6 +122,12 @@ read-only-channel bound `whatsapp`; a portable declaration names the rule, not t
     "search_memory_transcripts",
     "write_memory"
   ],
+  "requires": {
+    "tool_calling": true,
+    "min_context": 65536,
+    "structured_output": true,
+    "reasoning_effort": true
+  },
   "instructions": "",
   "budgets": {
     "reads": 8
