@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thebrotherscarr-bit/STEW/main/schema/2026-11-08-draft/record.schema.json",
+  "title": "STEW record",
+  "description": "One line of a board's append-only ledger. Its id, source, type, time, subject and data members carry CloudEvents 1.0 attribute names and meanings, so a record becomes a CloudEvent by adding specversion. spec/records.md.",
+  "type": "object",
+  "properties": {
+    "stew": { "$ref": "common.schema.json#/$defs/version" },
+    "kind": { "const": "record" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "seq": {
+      "description": "The record's position in its ledger, from 1, with no gaps.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "prev": {
+      "description": "sha256 of the previous line's bytes, lowercase hex; absent on the first record.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source": {
+      "description": "Who appended it: the board name and the actor (runtime, orchestrator, harness, human).",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,63}/(runtime|orchestrator|harness|human)$"
+    },
+    "type": {
+      "description": "What happened (spec/records.md, the record types).",
+      "enum": [
+        "stew.task.posted",
+        "stew.task.state",
+        "stew.card.raised",
+        "stew.card.answered",
+        "stew.bound.refused",
+        "stew.harness.tabled",
+        "stew.harness.loaded",
+        "stew.harness.unloaded",
+        "stew.summary.sent",
+        "stew.eval.run",
+        "stew.profile.promoted",
+        "stew.correction"
+      ]
+    },
+    "time": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "subject": {
+      "description": "The task id, eval set name or profile ref the record is about.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "data": { "type": "object" }
+  },
+  "required": ["stew", "kind", "id", "seq", "source", "type", "time", "subject", "data"],
+  "additionalProperties": false,
+  "patternProperties": { "^x-": {} },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "stew.task.state" } } },
+      "then": {
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "from": { "$ref": "common.schema.json#/$defs/taskState" },
+              "to": { "$ref": "common.schema.json#/$defs/taskState" },
+              "profile": { "$ref": "common.schema.json#/$defs/profileRef" },
+              "reason": { "type": "string" }
+            },
+            "required": ["from", "to"]
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "stew.profile.promoted" } } },
+      "then": {
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "profile": { "$ref": "common.schema.json#/$defs/profileRef" },
+              "replaces": { "$ref": "common.schema.json#/$defs/profileRef" },
+              "evidence": {
+                "description": "The eval runs (record ids) that met the bar.",
+                "type": "array",
+                "items": { "$ref": "common.schema.json#/$defs/id" },
+                "minItems": 1
+              }
+            },
+            "required": ["profile", "evidence"]
+          }
+        }
+      }
+    }
+  ]
+}

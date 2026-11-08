@@ -1,0 +1,2 @@
+{"stew":"2026-11-08-draft","kind":"record","id":"r-1","seq":1,"source":"home/runtime","type":"stew.task.posted","time":"2026-11-08T00:00:00Z","subject":"t-1","data":{}}
+{"stew":"2026-11-08-draft","kind":"record","id":"r-2","seq":2,"prev":"6d04e5c020b82697511305ac6bc7327e1bfdc2b95e85cb91eb099fb4fe3ed922","source":"home/runtime","type":"stew.task.state","time":"2026-11-08T00:00:00Z","subject":"t-1","data":{"from":"submitted","to":"completed"}}

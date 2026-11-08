@@ -1,0 +1,44 @@
+# Invalid: host-path
+
+Declarations are host-neutral: no absolute path, drive letter or home directory.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "profile",
+  "name": "eval-runner",
+  "version": 1,
+  "for": {
+    "task": "run an eval set from the phone and report it",
+    "capabilities": [
+      "N8"
+    ]
+  },
+  "tools": [
+    "secondbrain_eval_start",
+    "secondbrain_eval_status"
+  ],
+  "instructions": "Read C:\\Users\\someone\\notes\\plan.md first.",
+  "budgets": {
+    "reads": 0,
+    "tool_calls": 4
+  },
+  "reasoning": "low",
+  "gates": {
+    "bounds": [
+      "keys",
+      "archive",
+      "untrusted-shell",
+      "sitting"
+    ],
+    "extra": [
+      "no set other than the one named"
+    ]
+  },
+  "card": "plan",
+  "success": {
+    "check": "tool_call_args_match"
+  },
+  "summary": "<set> <tag>: <passed>/<total>, failed: <case ids>"
+}
+```

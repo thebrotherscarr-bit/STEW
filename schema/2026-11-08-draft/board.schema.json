@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thebrotherscarr-bit/STEW/main/schema/2026-11-08-draft/board.schema.json",
+  "title": "STEW board",
+  "description": "A blackboard: where task cards are posted and claimed, the bounds every run on it holds, the profiles it offers, the channels it hears and the ledger it appends to. spec/blackboard.md.",
+  "type": "object",
+  "properties": {
+    "stew": { "$ref": "common.schema.json#/$defs/version" },
+    "kind": { "const": "board" },
+    "name": { "$ref": "common.schema.json#/$defs/name" },
+    "supports": {
+      "description": "The STEW versions this board's runtime reads, newest first.",
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/version" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "bounds": {
+      "description": "The standing refusals every run on this board holds, enforced in code, whatever profile is worn.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/name" },
+          "rule": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "at": {
+            "description": "Where the runtime enforces it: the request, the plan, the call.",
+            "type": "array",
+            "items": { "enum": ["request", "plan", "call"] },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": ["id", "rule", "at"],
+        "additionalProperties": false,
+        "patternProperties": { "^x-": {} }
+      }
+    },
+    "profiles": {
+      "description": "The profile declarations this board offers, as paths relative to the board's root.",
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/relativePath" },
+      "minItems": 1
+    },
+    "default_profile": { "$ref": "common.schema.json#/$defs/name" },
+    "channels": {
+      "description": "Where requests come from, and what each may ask for.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "$ref": "common.schema.json#/$defs/name" },
+          "may": { "enum": ["read", "change"] },
+          "cards": { "description": "Whether a card can be answered on this channel.", "type": "boolean" }
+        },
+        "required": ["name", "may", "cards"],
+        "additionalProperties": false,
+        "patternProperties": { "^x-": {} }
+      }
+    },
+    "accelerators": {
+      "description": "How many task harnesses may hold the model at once. 1 on a single-accelerator machine.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "unanswered_card": {
+      "description": "Seconds after which an unanswered card is a No.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "ledger": {
+      "description": "The append-only record file, relative to the board's root.",
+      "$ref": "common.schema.json#/$defs/relativePath"
+    }
+  },
+  "required": ["stew", "kind", "name", "supports", "bounds", "profiles", "default_profile", "channels", "accelerators", "unanswered_card", "ledger"],
+  "additionalProperties": false,
+  "patternProperties": { "^x-": {} }
+}

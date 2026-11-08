@@ -1,0 +1,16 @@
+# Invalid: bad-profile-ref
+
+A task names a profile by name or name@version.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "task",
+  "id": "t-9",
+  "board": "home",
+  "profile": "Eval Runner",
+  "ask": "x",
+  "source": "phone",
+  "posted_at": "2026-11-08T00:00:00Z"
+}
+```

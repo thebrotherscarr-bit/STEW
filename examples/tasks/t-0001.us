@@ -1,0 +1,21 @@
+# Task: run the bounds set from the phone
+
+A task card as it is posted. It is never edited afterwards: what happened to it is the
+fold of its records in `../ledger.jsonl`.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "task",
+  "id": "t-0001",
+  "board": "home",
+  "profile": "eval-runner@1",
+  "ask": "Run the bounds set, tag phone-1",
+  "source": "phone",
+  "posted_at": "2026-11-08T14:02:11Z",
+  "inputs": {
+    "set": "bounds",
+    "tag": "phone-1"
+  }
+}
+```

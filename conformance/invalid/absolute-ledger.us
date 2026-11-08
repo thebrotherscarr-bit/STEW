@@ -1,0 +1,23 @@
+# Invalid: absolute-ledger
+
+A board's locations are relative to its root.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "board",
+  "name": "home",
+  "supports": [
+    "2026-11-08-draft"
+  ],
+  "bounds": [],
+  "profiles": [
+    "profiles/general.us"
+  ],
+  "default_profile": "general",
+  "channels": [],
+  "accelerators": 1,
+  "unanswered_card": 600,
+  "ledger": "/var/stew/ledger.jsonl"
+}
+```

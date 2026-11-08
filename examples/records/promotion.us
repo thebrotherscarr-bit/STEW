@@ -1,0 +1,32 @@
+# Record: a profile promoted
+
+A single record shown as a declaration. In a ledger it is one line; here it stands alone
+to show a promotion: eval-runner version 2 replaces version 1 because it met the bar on
+the same cases, twice in a row. The evidence names the eval runs.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "record",
+  "id": "r-0042",
+  "seq": 42,
+  "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+  "source": "home/human",
+  "type": "stew.profile.promoted",
+  "time": "2026-11-09T09:00:00Z",
+  "subject": "eval-runner@2",
+  "data": {
+    "profile": "eval-runner@2",
+    "replaces": "eval-runner@1",
+    "evidence": [
+      "r-0040",
+      "r-0041"
+    ],
+    "bar": {
+      "passed": 3,
+      "of": 3,
+      "runs_in_a_row": 2
+    }
+  }
+}
+```

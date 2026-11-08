@@ -1,0 +1,98 @@
+# Board: home
+
+One machine, one accelerator, one board. The bounds below hold for every run on this
+board whatever profile is worn; a profile may add a refusal and may never remove one.
+Every location here is relative to the board's root; where that root is, and which
+model server and accounts it uses, come from the runtime's own configuration on the
+machine it is installed on.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "board",
+  "name": "home",
+  "supports": [
+    "2026-11-08-draft"
+  ],
+  "bounds": [
+    {
+      "id": "keys",
+      "rule": "No secret file (.env, a private key, a credentials file) is read, printed or passed on a command line.",
+      "at": [
+        "request",
+        "call"
+      ]
+    },
+    {
+      "id": "archive",
+      "rule": "Nothing in the owner's archive is written, copied, moved or published; it is never pushed to a remote.",
+      "at": [
+        "request",
+        "plan",
+        "call"
+      ]
+    },
+    {
+      "id": "untrusted-shell",
+      "rule": "After untrusted content enters the run (a web page, a note, another agent's result), the host shell is refused for the rest of the run.",
+      "at": [
+        "call"
+      ]
+    },
+    {
+      "id": "sitting",
+      "rule": "While the owner is working in a folder, nothing in it is changed.",
+      "at": [
+        "request",
+        "plan",
+        "call"
+      ]
+    },
+    {
+      "id": "read-only-channel",
+      "rule": "A channel declared read-only asks for no change; such a request is refused and pointed to a channel that may change.",
+      "at": [
+        "request"
+      ]
+    },
+    {
+      "id": "github-writes",
+      "rule": "Remote repository writes are withheld until the owner grants them on eval evidence.",
+      "at": [
+        "call"
+      ]
+    }
+  ],
+  "profiles": [
+    "profiles/general.us",
+    "profiles/eval-runner.us",
+    "profiles/refuse.us"
+  ],
+  "default_profile": "general",
+  "channels": [
+    {
+      "name": "console",
+      "may": "change",
+      "cards": true
+    },
+    {
+      "name": "phone",
+      "may": "change",
+      "cards": true
+    },
+    {
+      "name": "chat",
+      "may": "read",
+      "cards": false
+    },
+    {
+      "name": "schedule",
+      "may": "change",
+      "cards": true
+    }
+  ],
+  "accelerators": 1,
+  "unanswered_card": 600,
+  "ledger": "ledger.jsonl"
+}
+```

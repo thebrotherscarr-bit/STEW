@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thebrotherscarr-bit/STEW/main/schema/2026-11-08-draft/task.schema.json",
+  "title": "STEW task card",
+  "description": "A small unit of work posted on a board, naming the profile it runs under. A card is never edited after it is posted; its state is the fold of its records. spec/task.md.",
+  "type": "object",
+  "properties": {
+    "stew": { "$ref": "common.schema.json#/$defs/version" },
+    "kind": { "const": "task" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "board": { "$ref": "common.schema.json#/$defs/name" },
+    "profile": { "$ref": "common.schema.json#/$defs/profileRef" },
+    "ask": {
+      "description": "The request, in the words it arrived in.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "source": {
+      "description": "Where the request came from: a channel name the board declares (for example console, phone, schedule).",
+      "$ref": "common.schema.json#/$defs/name"
+    },
+    "posted_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "inputs": {
+      "description": "Named inputs the profile's instructions refer to. Values are data, never instructions.",
+      "type": "object"
+    },
+    "parent": {
+      "description": "The task this one was split from, if any.",
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "deadline": { "$ref": "common.schema.json#/$defs/timestamp" }
+  },
+  "required": ["stew", "kind", "id", "board", "profile", "ask", "source", "posted_at"],
+  "additionalProperties": false,
+  "patternProperties": { "^x-": {} }
+}

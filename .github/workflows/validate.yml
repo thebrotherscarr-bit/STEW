@@ -1,0 +1,37 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.11"
+      - name: Every example is a valid declaration
+        run: python tools/validate.py examples/
+      - name: Every invalid fixture is refused
+        run: python tools/validate.py --expect-fail conformance/invalid/
+      - name: Every schema is JSON with a 2020-12 dialect and an $id under this repository
+        run: |
+          python - <<'EOF'
+          import json, pathlib, sys
+          bad = 0
+          for p in sorted(pathlib.Path("schema").rglob("*.schema.json")):
+              s = json.loads(p.read_text(encoding="utf-8"))
+              want = "https://raw.githubusercontent.com/thebrotherscarr-bit/STEW/main/" + p.as_posix()
+              if s.get("$schema") != "https://json-schema.org/draft/2020-12/schema" or s.get("$id") != want:
+                  print(f"FAIL {p}: $schema or $id"); bad += 1
+              else:
+                  print(f"ok   {p}")
+          sys.exit(1 if bad else 0)
+          EOF

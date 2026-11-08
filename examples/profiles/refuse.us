@@ -1,0 +1,29 @@
+# Profile: refuse
+
+The refusal hat, from Steward's spec 002. It holds no tools, so it reaches nothing: it
+can only say, in one sentence, that the request is refused and why. The runtime routes a
+request here before anything else when a standing bound refuses it.
+
+```json
+{
+  "stew": "2026-11-08-draft",
+  "kind": "profile",
+  "name": "refuse",
+  "version": 1,
+  "for": {
+    "task": "a request a bound refuses: a force-push, a key, the archive, a change from a read-only channel, the ground while a sitting is open",
+    "capabilities": ["L3", "B3", "L1", "L2", "F4"]
+  },
+  "tools": [],
+  "instructions": "Say in one sentence that this is refused and why. Offer nothing that does it.",
+  "budgets": { "reads": 0, "tool_calls": 0 },
+  "reasoning": "low",
+  "gates": {
+    "bounds": ["keys", "archive", "sitting", "read-only-channel"],
+    "extra": ["no option that performs the refused act"]
+  },
+  "card": "none",
+  "success": { "check": "refused_in_words" },
+  "summary": "refused: <the act>, <the rule>"
+}
+```

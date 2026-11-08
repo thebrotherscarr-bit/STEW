@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thebrotherscarr-bit/STEW/main/schema/2026-11-08-draft/eval.schema.json",
+  "title": "STEW eval set",
+  "description": "A versioned set of deterministic cases. Each case names the profile it runs under; the set's bar decides promotion. spec/evidence.md.",
+  "type": "object",
+  "properties": {
+    "stew": { "$ref": "common.schema.json#/$defs/version" },
+    "kind": { "const": "eval" },
+    "name": { "$ref": "common.schema.json#/$defs/name" },
+    "version": {
+      "description": "An integer; any change to a case or a check is a new version.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "changes": {
+      "description": "What each version changed, keyed by version number.",
+      "type": "object",
+      "patternProperties": { "^[1-9][0-9]*$": { "type": "string" } },
+      "additionalProperties": false
+    },
+    "bar": {
+      "description": "The promotion bar: passed of total cases, this many runs in a row.",
+      "type": "object",
+      "properties": {
+        "passed": { "type": "integer", "minimum": 0 },
+        "of": { "type": "integer", "minimum": 1 },
+        "runs_in_a_row": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["passed", "of", "runs_in_a_row"],
+      "additionalProperties": false
+    },
+    "gating": {
+      "description": "false for an outside calibration set that never gates a promotion and is never tuned on.",
+      "type": "boolean"
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "profile": { "$ref": "common.schema.json#/$defs/profileRef" },
+          "capabilities": {
+            "type": "array",
+            "items": { "$ref": "common.schema.json#/$defs/id" },
+            "uniqueItems": true
+          },
+          "ask": { "type": "string", "minLength": 1, "maxLength": 4000 },
+          "stand_ins": {
+            "description": "Tools offered by declaration only, with a fixed result, so nothing outside the run changes.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "$ref": "common.schema.json#/$defs/toolName" },
+                "result": { "type": "string" }
+              },
+              "required": ["name"],
+              "additionalProperties": false
+            }
+          },
+          "card_answers": {
+            "description": "How the case answers each card, by tool name; every other card is denied.",
+            "type": "object",
+            "additionalProperties": { "enum": ["approve", "deny", "none"] }
+          },
+          "checks": {
+            "description": "Deterministic check names (no model judge), each optionally with arguments.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "oneOf": [
+                { "$ref": "common.schema.json#/$defs/toolName" },
+                {
+                  "type": "object",
+                  "properties": {
+                    "check": { "$ref": "common.schema.json#/$defs/toolName" },
+                    "args": { "type": "object" }
+                  },
+                  "required": ["check"],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": ["id", "profile", "ask", "checks"],
+        "additionalProperties": false,
+        "patternProperties": { "^x-": {} }
+      }
+    }
+  },
+  "required": ["stew", "kind", "name", "version", "bar", "cases"],
+  "additionalProperties": false,
+  "patternProperties": { "^x-": {} }
+}

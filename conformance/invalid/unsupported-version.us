@@ -1,0 +1,44 @@
+# Invalid: unsupported-version
+
+A version the runtime does not support is refused, never guessed at.
+
+```json
+{
+  "stew": "2099-01-01",
+  "kind": "profile",
+  "name": "eval-runner",
+  "version": 1,
+  "for": {
+    "task": "run an eval set from the phone and report it",
+    "capabilities": [
+      "N8"
+    ]
+  },
+  "tools": [
+    "secondbrain_eval_start",
+    "secondbrain_eval_status"
+  ],
+  "instructions": "Plan one secondbrain_eval_start with the set and the tag the request names. Ask nothing else.\nAfter the card, read secondbrain_eval_status once. Report passed of total and each failed check.",
+  "budgets": {
+    "reads": 0,
+    "tool_calls": 4
+  },
+  "reasoning": "low",
+  "gates": {
+    "bounds": [
+      "keys",
+      "archive",
+      "untrusted-shell",
+      "sitting"
+    ],
+    "extra": [
+      "no set other than the one named"
+    ]
+  },
+  "card": "plan",
+  "success": {
+    "check": "tool_call_args_match"
+  },
+  "summary": "<set> <tag>: <passed>/<total>, failed: <case ids>"
+}
+```
